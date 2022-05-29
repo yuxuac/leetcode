@@ -8,6 +8,7 @@ namespace Leetcode
 {
     /// <summary>
     /// LRUCache: the least recent used item will be removed from cache when it exceeds size limit
+    /// Implemented using LinkedList
     /// </summary>
     public class LRUCache
     {

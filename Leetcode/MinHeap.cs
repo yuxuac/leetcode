@@ -1,9 +1,12 @@
 using System;
-namespace LEETCODE
+namespace Leetcode
 {
+    /// <summary>
+    /// Top item will always be the minimum
+    /// </summary>
     public class MinHeap
     {
-        private int[] data;
+        private readonly int[] data;
 
         public MinHeap(int size)
         {
@@ -15,17 +18,7 @@ namespace LEETCODE
             this.data = new int[size + 1];
             this.data[0] = array.Length;
             Array.Copy(array, 0, this.data, 1, array.Length);
-            Heapify (array);
-        }
-
-        public void Heapify(int[] array)
-        {
-            int firstNonLeafNodeIdx = this.Size() / 2;
-            while (firstNonLeafNodeIdx > 0)
-            {
-                SiftDown (firstNonLeafNodeIdx);
-                firstNonLeafNodeIdx--;
-            }
+            Heapify();
         }
 
         public void Insert(int val)
@@ -42,11 +35,14 @@ namespace LEETCODE
             }
         }
 
-        public void Swap(int[] array, int idx1, int idx2)
+        private void Heapify()
         {
-            int temp = array[idx1];
-            array[idx1] = array[idx2];
-            array[idx2] = temp;
+            int firstNonLeafNodeIdx = this.Size() / 2;
+            while (firstNonLeafNodeIdx > 0)
+            {
+                SiftDown(firstNonLeafNodeIdx);
+                firstNonLeafNodeIdx--;
+            }
         }
 
         public int? Delete()
@@ -70,7 +66,18 @@ namespace LEETCODE
             return result;
         }
 
-        public void SiftUp(int idx)
+        public int Top() => this.data[1];
+
+        public int Size() => this.data[0];
+
+        private void Swap(int[] array, int idx1, int idx2)
+        {
+            int temp = array[idx1];
+            array[idx1] = array[idx2];
+            array[idx2] = temp;
+        }
+
+        private void SiftUp(int idx)
         {
             int currIdx = idx / 2;
             while (currIdx > 0)
@@ -80,14 +87,14 @@ namespace LEETCODE
                 if (this.data[currIdx] > this.data[smallerChildIdx])
                 {
                     Swap(this.data, currIdx, smallerChildIdx);
-                    currIdx = currIdx / 2;
+                    currIdx /= 2;
                 }
                 else
                     break;
             }
         }
 
-        public void SiftDown(int idx)
+        private void SiftDown(int idx)
         {
             if (this.Size() > 0)
             {
@@ -121,7 +128,7 @@ namespace LEETCODE
                     ? this.data[rightChildIdx]
                     : int.MaxValue;
 
-            int smallerChildIdx = -1;
+            int smallerChildIdx;
 
             if (leftChildVal < rightChildVal)
                 smallerChildIdx = leftChildIdx;
@@ -136,9 +143,5 @@ namespace LEETCODE
         private int GetLeftChildIdx(int idx) => idx * 2;
 
         private int GetRightChildIdx(int idx) => idx * 2 + 1;
-
-        public int Top() => this.data[1];
-
-        public int Size() => this.data[0];
     }
 }

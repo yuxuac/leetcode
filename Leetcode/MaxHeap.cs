@@ -1,10 +1,13 @@
 using System;
 
-namespace LEETCODE
+namespace Leetcode
 {
+    /// <summary>
+    /// Top item will always be the maximum
+    /// </summary>
     public class MaxHeap
     {
-        private int[] data;
+        private readonly int[] data;
 
         public MaxHeap(int size)
         {
@@ -16,17 +19,7 @@ namespace LEETCODE
             this.data = new int[size + 1];
             this.data[0] = array.Length;
             Array.Copy(array, 0, this.data, 1, array.Length);
-            Heapify (array);
-        }
-
-        public void Heapify(int[] array)
-        {
-            int firstNonLeafNodeIdx = this.Size() / 2;
-            while (firstNonLeafNodeIdx > 0)
-            {
-                SiftDown (firstNonLeafNodeIdx);
-                firstNonLeafNodeIdx--;
-            }
+            Heapify();
         }
 
         public void Insert(int val)
@@ -41,13 +34,6 @@ namespace LEETCODE
                 // adjust the heap
                 SiftUp (currIdx);
             }
-        }
-
-        public void Swap(int[] array, int idx1, int idx2)
-        {
-            int temp = array[idx1];
-            array[idx1] = array[idx2];
-            array[idx2] = temp;
         }
 
         public int? Delete()
@@ -71,7 +57,28 @@ namespace LEETCODE
             return result;
         }
 
-        public void SiftUp(int idx)
+        public int Top() => this.data[1];
+
+        public int Size() => this.data[0];
+
+        private void Heapify()
+        {
+            int firstNonLeafNodeIdx = this.Size() / 2;
+            while (firstNonLeafNodeIdx > 0)
+            {
+                SiftDown(firstNonLeafNodeIdx);
+                firstNonLeafNodeIdx--;
+            }
+        }
+
+        private void Swap(int[] array, int idx1, int idx2)
+        {
+            int temp = array[idx1];
+            array[idx1] = array[idx2];
+            array[idx2] = temp;
+        }
+
+        private void SiftUp(int idx)
         {
             int currIdx = idx / 2;
             while (currIdx > 0)
@@ -81,14 +88,14 @@ namespace LEETCODE
                 if (this.data[currIdx] < this.data[largerChildIdx])
                 {
                     Swap(this.data, currIdx, largerChildIdx);
-                    currIdx = currIdx / 2;
+                    currIdx /= 2;
                 }
                 else
                     break;
             }
         }
 
-        public void SiftDown(int idx)
+        private void SiftDown(int idx)
         {
             if (this.Size() > 0)
             {
@@ -122,14 +129,13 @@ namespace LEETCODE
                     ? this.data[rightChildIdx]
                     : int.MinValue;
 
-            int LargerChildIdx = -1;
-
+            int largerChildIdx;
             if (leftChildVal > rightChildVal)
-                LargerChildIdx = leftChildIdx;
+                largerChildIdx = leftChildIdx;
             else
-                LargerChildIdx = rightChildIdx;
+                largerChildIdx = rightChildIdx;
 
-            return LargerChildIdx;
+            return largerChildIdx;
         }
 
         private bool IsLeafNode(int idx) => idx > this.Size() / 2;
@@ -137,9 +143,5 @@ namespace LEETCODE
         private int GetLeftChildIdx(int idx) => idx * 2;
 
         private int GetRightChildIdx(int idx) => idx * 2 + 1;
-
-        public int Top() => this.data[1];
-
-        public int Size() => this.data[0];
     }
 }
